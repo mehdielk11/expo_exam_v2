@@ -8,15 +8,21 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useTasks } from '../hooks/useTasks';
 import TaskCard from '../components/TaskCard';
 import Loading from '../components/Loading';
 import { Task } from '../types/task';
 
 export default function ListScreen() {
-  const { tasks, loading, removeTask, toggleStatus } = useTasks();
+  const { tasks, loading, removeTask, toggleStatus, loadTasks } = useTasks();
   const router = useRouter();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadTasks();
+    }, [loadTasks])
+  );
 
   if (loading) {
     return <Loading message="Loading your tasks..." />;
