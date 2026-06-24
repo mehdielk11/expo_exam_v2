@@ -7,6 +7,7 @@ import {
   insertTask,
   deleteTask,
   toggleTaskStatus,
+  updateTask,
 } from '../database/sqlite';
 
 export function useTasks() {
@@ -77,5 +78,18 @@ export function useTasks() {
     [loadTasks]
   );
 
-  return { tasks, loading, error, addTask, removeTask, toggleStatus, loadTasks };
+  const editTask = useCallback(
+    async (id: number, title: string, description: string) => {
+      try {
+        await updateTask(id, title, description);
+        await loadTasks();
+      } catch (e) {
+        Alert.alert('Database Error', 'Could not update task. Please try again.');
+        throw e;
+      }
+    },
+    [loadTasks]
+  );
+
+  return { tasks, loading, error, addTask, removeTask, toggleStatus, editTask, loadTasks };
 }

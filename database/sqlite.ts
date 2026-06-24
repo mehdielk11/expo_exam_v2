@@ -59,3 +59,15 @@ export async function toggleTaskStatus(
   const newStatus = currentStatus === 0 ? 1 : 0;
   await db.runAsync('UPDATE tasks SET status = ? WHERE id = ?;', [newStatus, id]);
 }
+
+export async function updateTask(
+  id: number,
+  title: string,
+  description: string
+): Promise<void> {
+  const db = await getDB();
+  await db.runAsync(
+    'UPDATE tasks SET title = ?, description = ? WHERE id = ?;',
+    [title, description, id]
+  );
+}

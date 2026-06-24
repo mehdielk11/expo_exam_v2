@@ -7,9 +7,10 @@ interface TaskCardProps {
   task: Task;
   onDelete: (id: number) => void;
   onToggle: (id: number, status: 0 | 1) => void;
+  onPress: () => void;
 }
 
-export default function TaskCard({ task, onDelete, onToggle }: TaskCardProps) {
+export default function TaskCard({ task, onDelete, onToggle, onPress }: TaskCardProps) {
   const isCompleted = task.status === 1;
   const formattedDate = new Date(task.createdAt).toLocaleDateString('en-US', {
     day: 'numeric',
@@ -19,21 +20,23 @@ export default function TaskCard({ task, onDelete, onToggle }: TaskCardProps) {
 
   return (
     <View style={[styles.card, isCompleted && styles.cardCompleted]}>
-      <View style={styles.header}>
-        <View style={[styles.badge, isCompleted ? styles.badgeDone : styles.badgePending]}>
-          <Text style={[styles.badgeText, isCompleted ? styles.badgeTextDone : styles.badgeTextPending]}>
-            {isCompleted ? 'Completed' : 'Pending'}
-          </Text>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={styles.cardContent}>
+        <View style={styles.header}>
+          <View style={[styles.badge, isCompleted ? styles.badgeDone : styles.badgePending]}>
+            <Text style={[styles.badgeText, isCompleted ? styles.badgeTextDone : styles.badgeTextPending]}>
+              {isCompleted ? 'Completed' : 'Pending'}
+            </Text>
+          </View>
+          <Text style={styles.date}>{formattedDate}</Text>
         </View>
-        <Text style={styles.date}>{formattedDate}</Text>
-      </View>
 
-      <Text style={[styles.title, isCompleted && styles.titleCompleted]} numberOfLines={1}>
-        {task.title}
-      </Text>
-      <Text style={styles.description} numberOfLines={2}>
-        {task.description}
-      </Text>
+        <Text style={[styles.title, isCompleted && styles.titleCompleted]} numberOfLines={1}>
+          {task.title}
+        </Text>
+        <Text style={styles.description} numberOfLines={2}>
+          {task.description}
+        </Text>
+      </TouchableOpacity>
 
       <View style={styles.actions}>
         <TouchableOpacity
@@ -80,6 +83,9 @@ const styles = StyleSheet.create({
     elevation: 2,
     borderLeftWidth: 4,
     borderLeftColor: '#F59E0B',
+  },
+  cardContent: {
+    width: '100%',
   },
   cardCompleted: {
     borderLeftColor: '#10B981',
